@@ -3,6 +3,17 @@ var Frame = require('../src/Frame.js');
 var Game = require('../src/Game.js');
 
 
+suite('Demo Test Suite', function(){
+
+  test('Demo test', function(done){
+        expect(1).to.eql(2);
+        done();
+  });
+
+
+});
+
+
 suite('Bowling Score Test', function(){
 
   test('Create Frame', function(done){

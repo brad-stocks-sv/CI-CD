@@ -6,7 +6,7 @@ var Game = require('../src/Game.js');
 suite('Demo Test Suite', function(){
 
   test('Demo test', function(done){
-        expect(1).to.eql(2);
+        expect(1).to.eql(1);
         done();
   });
 

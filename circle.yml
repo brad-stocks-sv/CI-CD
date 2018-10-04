@@ -26,15 +26,19 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: yarn install
+      - run: npm install -g grunt-cli mocha istanbul
 
+      # dependencies:
+      #   override:
+      #     - npm install -g grunt-cli mocha istanbul
+      #     - npm install
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: yarn test
+      - run: grunt circleci
 # # setup node environment
 # machine:
 #   node:

@@ -18,26 +18,42 @@ jobs:
 
     steps:
       - checkout
+      post:
+      # Sometimes git might ask for your identity and block the build. Add one valid account here:
+        - git config user.email "brad.stocks@sv.cmu.edu" 
+        - git config user.name "brad-stocks-sv"
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      # - restore_cache:
+      #     keys:
+      #     - v1-dependencies-{{ checksum "package.json" }}
+      #     # fallback to using the latest cache if no exact match is found
+      #     - v1-dependencies-
 
-      - run: sudo npm install -g grunt-cli mocha istanbul
+      # # install dependencies
+    dependencies:
+      override:
+        - npm install -g grunt-cli mocha istanbul
+        - npm install
 
-      - store_test_results:
-          path: test-results
+      # - run: 
+      #   - sudo npm install -g grunt-cli mocha istanbul
+      #   - sudo npm install
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: grunt circleci
+      # - run: yarn test
+      test:
+        override:
+          - mkdir -p $CIRCLE_TEST_REPORTS/mocha
+          - grunt circleci
+
+
+
 # # setup node environment
 # machine:
 #   node:

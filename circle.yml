@@ -39,9 +39,9 @@ jobs: # a collection of steps
         # # Sometimes git might ask for your identity and block the build. Add one valid account here:
         #   - git config user.email "brad.stocks@sv.cmu.edu" 
         #   - git config user.name "brad-stocks-sv"
-      - run:
-          name: update-npm 
-          command: 'sudo npm install'
+      # - run:
+      #     name: update-npm 
+      #     command: 'sudo npm install'
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
       - run:

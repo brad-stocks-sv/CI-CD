@@ -28,10 +28,9 @@ jobs:
 
       - run: sudo npm install -g grunt-cli mocha istanbul
 
-      # dependencies:
-      #   override:
-      #     - npm install -g grunt-cli mocha istanbul
-      #     - npm install
+      - store_test_results:
+          path: test-results
+
       - save_cache:
           paths:
             - node_modules

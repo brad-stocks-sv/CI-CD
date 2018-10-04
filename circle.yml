@@ -1,24 +1,67 @@
-# setup node environment
-machine:
-  node:
-    version: 4.1.2
+# # setup node environment
+# machine:
+#   node:
+#     version: 4.1.2
 
-# merge master before testing to make sure all tests pass
-# with the updated version of master
-checkout:
-   post:
-   # Sometimes git might ask for your identity and block the build. Add one valid account here:
-    - git config user.email "brad.stocks@sv.cmu.edu" 
-    - git config user.name "brad-stocks-sv"
+# # merge master before testing to make sure all tests pass
+# # with the updated version of master
+# checkout:
+#    post:
+#    # Sometimes git might ask for your identity and block the build. Add one valid account here:
+#     - git config user.email "brad.stocks@sv.cmu.edu" 
+#     - git config user.name "brad-stocks-sv"
 
-# install dependencies
-dependencies:
-  override:
-    - npm install -g grunt-cli mocha istanbul
-    - npm install
+# # install dependencies
+# dependencies:
+#   override:
+#     - npm install -g grunt-cli mocha istanbul
+#     - npm install
 
-# run tests
-test:
-  override:
-    - mkdir -p $CIRCLE_TEST_REPORTS/mocha
-    - grunt circleci
+# # run tests
+# test:
+#   override:
+#     - mkdir -p $CIRCLE_TEST_REPORTS/mocha
+#     - grunt circleci
+
+version: 2 # use CircleCI 2.0
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    # working_directory: ~/mern-starter # directory where steps will run
+    # docker: # run the steps with Docker
+    #   - image: circleci/node:4.8.2 # ...with this image as the primary container; this is where all `steps` will run
+    #   - image: mongo:3.4.4 # and this image as the secondary service container
+    steps: # a collection of executable commands 
+      - checkout: # special step to check out source code to working directory
+        post:
+        # Sometimes git might ask for your identity and block the build. Add one valid account here:
+          - git config user.email "brad.stocks@sv.cmu.edu" 
+          - git config user.name "brad-stocks-sv"
+      - run:
+          name: update-npm 
+          command: 'sudo npm install'
+      - restore_cache: # special step to restore the dependency cache 
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm-wee
+          command: sudo npm install -g grunt-cli mocha istanbul
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run: # run tests
+          name: make_dir
+          command: mkdir -p $CIRCLE_TEST_REPORTS/mocha
+      - run: # run tests
+          name: test
+          command: grunt circleci
+      # - run: # run coverage report
+      #     name: code-coverage
+      #     command: './node_modules/.bin/nyc report --reporter=text-lcov'
+      # - store_artifacts: # special step to save test results as as artifact
+      #     path: test-results.xml
+      #     prefix: tests
+      # - store_artifacts:
+      #     path: coverage
+      #     prefix: coverage
+      # - store_test_results: # special step to upload test results for display in Test Summary
+      #     path: test-results.xml
